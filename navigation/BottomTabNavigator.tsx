@@ -1,12 +1,14 @@
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
+import { StyleSheet } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
+import TweetDetails from '../screens/TweetDetails';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
@@ -19,17 +21,32 @@ export default function BottomTabNavigator() {
       initialRouteName="TabOne"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
       <BottomTab.Screen
-        name="TabOne"
+        name="Home"
         component={TabOneNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color }) =>
+            <TabBarIcon name="md-home" color={color} />,
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="Search"
         component={TabTwoNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="md-search" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Notifications"
+        component={TabTwoNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <TabBarIcon name="md-notifications" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Dm"
+        component={TabTwoNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <TabBarIcon name="md-mail" color={color} />,
         }}
       />
     </BottomTab.Navigator>
@@ -47,12 +64,27 @@ function TabBarIcon(props: { name: string; color: string }) {
 const TabOneStack = createStackNavigator<TabOneParamList>();
 
 function TabOneNavigator() {
+
+  const theme = useColorScheme();
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
-        name="TabOneScreen"
+        name="Home"
         component={TabOneScreen}
-        options={{ headerTitle: 'Tab One Title' }}
+        options={{
+          headerLeft: props =>
+            <Ionicons style={styles.headerLeft} size={30} name="md-menu" color={Colors[theme].tint} />,
+          headerTitle: props =>
+            <AntDesign size={30} name="twitter" color={Colors[theme].tint} />,
+          headerRight: () => (
+            <Ionicons style={styles.headerRight} size={30} name="md-menu" color={Colors[theme].tint} />
+          ),
+        }}
+      />
+      <TabOneStack.Screen
+        name="TweetDetails"
+        component={TweetDetails}
+        options={{ headerTitle: 'TweetDetails' }}
       />
     </TabOneStack.Navigator>
   );
@@ -71,3 +103,15 @@ function TabTwoNavigator() {
     </TabTwoStack.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  headerLeft: {
+    marginStart: 16
+  },
+  headerRight: {
+    marginEnd: 16
+  }
+});
